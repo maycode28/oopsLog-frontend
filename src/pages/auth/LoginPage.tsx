@@ -1,7 +1,7 @@
-import { useState, type FormEvent } from 'react';
-import { Link } from 'react-router-dom';
-import { AuthField } from '../../features/auth/components/AuthField';
-import { useAuth } from '../../features/auth/hooks/useAuth';
+import { useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
+import { AuthField } from "../../features/auth/components/AuthField";
+import { useAuth } from "../../features/auth/hooks/useAuth";
 
 function Cloud({ className }: { className?: string }) {
   return (
@@ -17,8 +17,8 @@ function Cloud({ className }: { className?: string }) {
 
 export default function LoginPage() {
   const { login, isLoading, error } = useAuth();
-  const [loginId, setLoginId] = useState('');
-  const [password, setPassword] = useState('');
+  const [loginId, setLoginId] = useState("");
+  const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -39,7 +39,9 @@ export default function LoginPage() {
       <main className="relative z-10 w-full max-w-[420px] mx-auto px-5 py-12 flex flex-col items-center gap-8">
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center rotate-3 hover:rotate-0 transition-transform duration-500">
-            <span className="material-symbols-outlined text-4xl text-primary">hiking</span>
+            <span className="material-symbols-outlined text-4xl text-primary">
+              hiking
+            </span>
           </div>
 
           <h1 className="font-headline font-extrabold text-3xl text-primary tracking-tight">
@@ -52,13 +54,6 @@ export default function LoginPage() {
         </div>
 
         <div className="w-full bg-white/80 backdrop-blur-xl rounded-2xl p-8 shadow-[0_32px_64px_-16px_rgba(23,97,139,0.12)] flex flex-col gap-5">
-          {error && (
-            <div className="bg-error-container/30 text-error rounded-xl px-4 py-3 text-sm font-medium flex items-center gap-2">
-              <span className="material-symbols-outlined text-base">warning</span>
-              {error}
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <AuthField
               id="loginId"
@@ -86,24 +81,24 @@ export default function LoginPage() {
                 <input
                   id="password"
                   name="password"
-                  type={showPw ? 'text' : 'password'}
+                  type={showPw ? "text" : "password"}
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   autoComplete="current-password"
-                  aria-invalid={false}
+                  aria-invalid={!!error}
                   className="w-full h-14 px-5 pr-12 rounded-xl bg-surface-container-low border-2 border-transparent font-medium placeholder:text-outline/40 transition-all duration-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
                 />
 
                 <button
                   type="button"
                   onClick={() => setShowPw((v) => !v)}
-                  aria-label={showPw ? '비밀번호 숨기기' : '비밀번호 보기'}
+                  aria-label={showPw ? "비밀번호 숨기기" : "비밀번호 보기"}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors"
                 >
                   <span className="material-symbols-outlined text-xl">
-                    {showPw ? 'visibility_off' : 'visibility'}
+                    {showPw ? "visibility_off" : "visibility"}
                   </span>
                 </button>
               </div>
@@ -117,6 +112,15 @@ export default function LoginPage() {
                 아이디 / 비밀번호 찾기
               </button>
             </div>
+
+            {error && (
+              <div className="rounded-xl border border-error/20 bg-error-container/30 px-4 py-3 text-sm text-error font-medium flex items-center gap-2">
+                <span className="material-symbols-outlined text-base shrink-0">
+                  warning
+                </span>
+                <p className="leading-5 break-words">{error}</p>
+              </div>
+            )}
 
             <button
               type="submit"
@@ -138,8 +142,11 @@ export default function LoginPage() {
         </div>
 
         <p className="text-on-surface-variant font-medium text-sm">
-          계정이 없으신가요?{' '}
-          <Link to="/signup" className="font-bold text-primary hover:underline underline-offset-4">
+          계정이 없으신가요?{" "}
+          <Link
+            to="/signup"
+            className="font-bold text-primary hover:underline underline-offset-4"
+          >
             회원가입
           </Link>
         </p>

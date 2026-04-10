@@ -1,23 +1,26 @@
-import { useState, type FormEvent, type ChangeEvent } from 'react';
-import { Link } from 'react-router-dom';
-import { AuthField } from '../../features/auth/components/AuthField';
-import { useAuth } from '../../features/auth/hooks/useAuth';
-import type { SignupRequest } from '../../features/auth/types/auth.types';
+import { useState, type FormEvent, type ChangeEvent } from "react";
+import { Link } from "react-router-dom";
+import { AuthField } from "../../features/auth/components/AuthField";
+import { useAuth } from "../../features/auth/hooks/useAuth";
+import type { SignupRequest } from "../../features/auth/types/auth.types";
 
 const INITIAL_FORM: SignupRequest = {
-  loginId: '',
-  name: '',
-  nickname: '',
-  email: '',
-  phoneNumber: '',
-  birthDate: '',
-  password: '',
+  loginId: "",
+  name: "",
+  nickname: "",
+  email: "",
+  phoneNumber: "",
+  birthDate: "",
+  password: "",
 };
 
 export default function SignupPage() {
   const { signup, isLoading, error } = useAuth();
   const [form, setForm] = useState<SignupRequest>(INITIAL_FORM);
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [showPw, setShowPw] = useState(false);
+  const [showPwConfirm, setShowPwConfirm] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
 
   const set =
     (field: keyof SignupRequest) => (e: ChangeEvent<HTMLInputElement>) =>
@@ -25,6 +28,13 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLocalError(null);
+
+    if (form.password !== passwordConfirm) {
+      setLocalError("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
     await signup(form);
   };
 
@@ -36,10 +46,14 @@ export default function SignupPage() {
       </div>
 
       <div className="pointer-events-none absolute top-[12%] left-8 opacity-20 animate-[float_8s_ease-in-out_infinite]">
-        <span className="material-symbols-outlined text-[96px] text-white">cloud</span>
+        <span className="material-symbols-outlined text-[96px] text-white">
+          cloud
+        </span>
       </div>
       <div className="pointer-events-none absolute bottom-24 right-6 opacity-20 animate-[float_10s_ease-in-out_infinite_3s]">
-        <span className="material-symbols-outlined text-[80px] text-white">cloud</span>
+        <span className="material-symbols-outlined text-[80px] text-white">
+          cloud
+        </span>
       </div>
 
       <header className="fixed top-0 inset-x-0 z-50 h-16 px-5 flex items-center justify-between bg-surface/75 backdrop-blur-xl">
@@ -48,17 +62,25 @@ export default function SignupPage() {
             to="/login"
             className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:scale-105 transition-transform"
           >
-            <span className="material-symbols-outlined text-primary">arrow_back</span>
+            <span className="material-symbols-outlined text-primary">
+              arrow_back
+            </span>
           </Link>
-          <span className="font-headline font-bold text-primary text-lg">커뮤니티 가입</span>
+          <span className="font-headline font-bold text-primary text-lg">
+            커뮤니티 가입
+          </span>
         </div>
-        <span className="font-headline font-black text-primary text-xl">환영합니다</span>
+        <span className="font-headline font-black text-primary text-xl">
+          환영합니다
+        </span>
       </header>
 
       <main className="pt-24 pb-16 px-4 flex justify-center">
         <section className="relative w-full max-w-xl">
           <div className="hidden md:flex absolute -right-14 -bottom-10 w-28 h-28 bg-secondary-container rounded-2xl items-center justify-center rotate-12 shadow-lg z-10">
-            <span className="material-symbols-outlined text-5xl text-secondary">potted_plant</span>
+            <span className="material-symbols-outlined text-5xl text-secondary">
+              potted_plant
+            </span>
           </div>
           <div className="hidden md:flex absolute -left-10 -top-8 w-20 h-20 bg-tertiary-container rounded-2xl items-center justify-center -rotate-12 shadow-lg z-10">
             <span
@@ -72,7 +94,9 @@ export default function SignupPage() {
           <div className="bg-white/75 backdrop-blur-2xl rounded-2xl p-8 md:p-12 shadow-[0_8px_48px_0_rgba(45,47,44,0.08)] border border-white/50">
             <header className="mb-10 text-center">
               <div className="inline-flex p-4 rounded-full bg-secondary-container text-on-secondary-container mb-4">
-                <span className="material-symbols-outlined text-4xl">person_add</span>
+                <span className="material-symbols-outlined text-4xl">
+                  person_add
+                </span>
               </div>
               <h2 className="font-headline text-3xl font-extrabold tracking-tight text-on-surface">
                 새로운 모험을 시작해요!
@@ -82,14 +106,10 @@ export default function SignupPage() {
               </p>
             </header>
 
-            {error && (
-              <div className="mb-6 bg-error-container/30 text-error rounded-xl px-4 py-3 text-sm font-medium flex items-center gap-2">
-                <span className="material-symbols-outlined text-base">warning</span>
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <form
+              onSubmit={handleSubmit}
+              className="grid grid-cols-1 md:grid-cols-2 gap-5"
+            >
               <div className="md:col-span-2">
                 <AuthField
                   id="loginId"
@@ -99,7 +119,7 @@ export default function SignupPage() {
                   type="text"
                   placeholder="고유한 ID 선택"
                   value={form.loginId}
-                  onChange={set('loginId')}
+                  onChange={set("loginId")}
                   required
                   autoComplete="username"
                 />
@@ -113,7 +133,7 @@ export default function SignupPage() {
                 type="text"
                 placeholder="섬 주민 이름"
                 value={form.name}
-                onChange={set('name')}
+                onChange={set("name")}
                 required
               />
 
@@ -125,7 +145,7 @@ export default function SignupPage() {
                 type="text"
                 placeholder="뭐라고 불러드릴까요?"
                 value={form.nickname}
-                onChange={set('nickname')}
+                onChange={set("nickname")}
                 required
               />
 
@@ -138,7 +158,7 @@ export default function SignupPage() {
                   type="email"
                   placeholder="resident@oopslog.com"
                   value={form.email}
-                  onChange={set('email')}
+                  onChange={set("email")}
                   required
                   autoComplete="email"
                 />
@@ -152,7 +172,7 @@ export default function SignupPage() {
                 type="tel"
                 placeholder="010-0000-0000"
                 value={form.phoneNumber}
-                onChange={set('phoneNumber')}
+                onChange={set("phoneNumber")}
                 required
                 autoComplete="tel"
               />
@@ -163,9 +183,8 @@ export default function SignupPage() {
                 label="생년월일"
                 icon="calendar_month"
                 type="date"
-                placeholder="yyyy-mm-dd"
                 value={form.birthDate}
-                onChange={set('birthDate')}
+                onChange={set("birthDate")}
                 required
               />
 
@@ -174,17 +193,19 @@ export default function SignupPage() {
                   htmlFor="password"
                   className="flex items-center gap-2 font-headline font-bold text-sm text-primary px-1"
                 >
-                  <span className="material-symbols-outlined text-lg">lock</span>
-                  비밀 코드
+                  <span className="material-symbols-outlined text-lg">
+                    lock
+                  </span>
+                  비밀번호
                 </label>
                 <div className="relative">
                   <input
                     id="password"
                     name="password"
-                    type={showPw ? 'text' : 'password'}
+                    type={showPw ? "text" : "password"}
                     placeholder="••••••••"
                     value={form.password}
-                    onChange={set('password')}
+                    onChange={set("password")}
                     required
                     autoComplete="new-password"
                     className="w-full h-14 px-5 pr-12 rounded-xl bg-surface-container-low border-2 border-transparent font-medium placeholder:text-outline/40 transition-all duration-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
@@ -192,15 +213,65 @@ export default function SignupPage() {
                   <button
                     type="button"
                     onClick={() => setShowPw((v) => !v)}
-                    aria-label={showPw ? '비밀번호 숨기기' : '비밀번호 보기'}
+                    aria-label={showPw ? "비밀번호 숨기기" : "비밀번호 보기"}
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors"
                   >
                     <span className="material-symbols-outlined text-xl">
-                      {showPw ? 'visibility_off' : 'visibility'}
+                      {showPw ? "visibility_off" : "visibility"}
                     </span>
                   </button>
                 </div>
               </div>
+
+              <div className="md:col-span-2 space-y-2">
+                <label
+                  htmlFor="passwordConfirm"
+                  className="flex items-center gap-2 font-headline font-bold text-sm text-primary px-1"
+                >
+                  <span className="material-symbols-outlined text-lg">
+                    verified_user
+                  </span>
+                  비밀번호 확인
+                </label>
+                <div className="relative">
+                  <input
+                    id="passwordConfirm"
+                    name="passwordConfirm"
+                    type={showPwConfirm ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={passwordConfirm}
+                    onChange={(e) => setPasswordConfirm(e.target.value)}
+                    required
+                    autoComplete="new-password"
+                    className="w-full h-14 px-5 pr-12 rounded-xl bg-surface-container-low border-2 border-transparent font-medium placeholder:text-outline/40 transition-all duration-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPwConfirm((v) => !v)}
+                    aria-label={
+                      showPwConfirm ? "비밀번호 숨기기" : "비밀번호 보기"
+                    }
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-xl">
+                      {showPwConfirm ? "visibility_off" : "visibility"}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {(error || localError) && (
+                <div className="md:col-span-2">
+                  <div className="rounded-xl border border-error/20 bg-error-container/30 px-4 py-3 text-sm text-error font-medium flex items-center gap-2">
+                    <span className="material-symbols-outlined text-base shrink-0">
+                      warning
+                    </span>
+                    <p className="leading-5 break-words">
+                      {localError ?? error}
+                    </p>
+                  </div>
+                </div>
+              )}
 
               <div className="md:col-span-2 pt-2">
                 <button
@@ -224,7 +295,7 @@ export default function SignupPage() {
 
             <footer className="mt-8 text-center">
               <p className="text-on-surface-variant font-medium text-sm">
-                이미 계정이 있나요?{' '}
+                이미 계정이 있나요?{" "}
                 <Link
                   to="/login"
                   className="text-primary font-bold hover:underline underline-offset-4"
