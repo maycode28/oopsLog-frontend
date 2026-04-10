@@ -1,11 +1,9 @@
 ﻿import { motion } from "framer-motion";
 
-type Props = {
-  dir: number;
-  isLoading: boolean;
-};
+import type { ScreenScanningProps } from "../types/mindTuning.types";
+import ScanningIndicator from "./ScanningIndicator";
 
-export default function ScreenScanning({ dir, isLoading }: Props) {
+export default function ScreenScanning({ dir, isLoading }: ScreenScanningProps) {
   return (
     <motion.div
       key="scanning"
@@ -19,13 +17,7 @@ export default function ScreenScanning({ dir, isLoading }: Props) {
       <div className="scan-beam" />
 
       <div className="screen-inner scanning-inner">
-        <div className="scan-title">숲속을 찾는 중...</div>
-        <div className="scan-dots">
-          <span />
-          <span />
-          <span />
-        </div>
-        <p>{isLoading ? "AI가 감정 신호를 읽고 있어요" : "분석 완료"}</p>
+        <ScanningIndicator isLoading={isLoading} />
       </div>
     </motion.div>
   );

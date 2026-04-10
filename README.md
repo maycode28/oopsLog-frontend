@@ -67,3 +67,10 @@ types/
     •	main: 배포 기준
     •	dev: 개발 통합
     •	feat / chore: 작업 단위 브랜치
+
+## 📁 Folder Structure
+- `src/features/`: 기능 단위별 독립적인 코드 관리 (관심사 분리)
+    - `mind-tuning/`: 마음 튜닝(AI 레스큐) 관련 로직
+        - `api/`: API 통신 함수
+        - `screens/`: 페이지 단위 컴포넌트
+        - `constants/`: 앱 내 고정값
