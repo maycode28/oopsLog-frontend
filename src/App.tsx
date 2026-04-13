@@ -1,22 +1,23 @@
-﻿import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './pages/auth/LoginPage';
-import SignupPage from './pages/auth/SignupPage';
-
-// TODO: 각 페이지 구현 후 import 추가
-// import MyPage from './pages/mypage/MyPage';
-// import EditProfilePage from './pages/mypage/EditProfilePage';
-// import GuidePage from './pages/guide/GuidePage';
+﻿import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import LoginPage from "./pages/auth/LoginPage";
+import SignupPage from "./pages/auth/SignupPage";
+import FailureDetailPage from "./pages/mypage/FailureDetailPage";
+import MyPage from "./pages/mypage/MyPage";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* auth */}
+        <Route path="/" element={<MyPage />} />
+        <Route path="/mypage" element={<MyPage />} />
+        <Route
+          path="/mypage/failures/:failureId"
+          element={<FailureDetailPage />}
+        />
+
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
-        
 
-        {/* fallback */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
