@@ -3,18 +3,20 @@ import confetti from 'canvas-confetti';
 import { useEffect, useRef } from 'react';
 
 import type { RescueAnimalProps } from '../types/mindTuning.types';
+import { translateDistortionLabel } from '../../../utils/distortion';
 
 export default function RescueAnimal({ animal, state, onClick }: RescueAnimalProps) {
-  const isClickable = state.step === 1;
-  const isFlipped = state.step >= 4;
+  const isClickable = state.step === 1 || state.step === 4;
+  const isFlipped = state.isBackVisible;
   const bubbleRef = useRef<HTMLDivElement | null>(null);
-  const previousFlippedRef = useRef(isFlipped);
+  const previousRescuedRef = useRef(state.step >= 4);
 
   useEffect(() => {
-    const didFlip = isFlipped && !previousFlippedRef.current;
-    previousFlippedRef.current = isFlipped;
+    const isRescued = state.step >= 4;
+    const didFlipForFirstTime = isRescued && !previousRescuedRef.current;
+    previousRescuedRef.current = isRescued;
 
-    if (!didFlip || !bubbleRef.current) {
+    if (!didFlipForFirstTime || !bubbleRef.current) {
       return;
     }
 
@@ -45,7 +47,7 @@ export default function RescueAnimal({ animal, state, onClick }: RescueAnimalPro
       origin,
       zIndex: 30,
     });
-  }, [isFlipped]);
+  }, [state.step]);
 
   const animalMotion =
     state.step === 1
@@ -85,14 +87,14 @@ export default function RescueAnimal({ animal, state, onClick }: RescueAnimalPro
       >
         <div className="animal-bubble-face animal-bubble-front bubble-step-1">
           <div className="animal-bubble__content">
-            {state.data.label ? <div className="animal-tag">{state.data.label}</div> : null}
+            {state.data.label ? <div className="animal-tag">{translateDistortionLabel(state.data.label)}</div> : null}
             <p>{state.data.distortion ?? ''}</p>
           </div>
         </div>
 
         <div className="animal-bubble-face animal-bubble-back bubble-step-4">
           <div className="animal-bubble__content">
-            {state.data.label ? <div className="animal-tag animal-tag--success">{state.data.label}</div> : null}
+            {state.data.label ? <div className="animal-tag animal-tag--success">{translateDistortionLabel(state.data.label)}</div> : null}
             <p>{state.data.perspective ?? ''}</p>
           </div>
         </div>

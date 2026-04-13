@@ -7,10 +7,7 @@ export type LoadingMode = 'analysis' | 'restart';
 
 export type GameTip = string;
 
-/**
- * 동물 ID
- */
-export type AnimalId = 'turtle' | 'squirrel' | 'rabbit';
+export type AnimalId = string;
 
 /**
  * 구조 화면 단계
@@ -54,13 +51,14 @@ export interface AnimalConfig {
  */
 export interface AnimalState {
   step: RescueStep;
+  isBackVisible: boolean;
   data: AnimalAIItem;
 }
 
 /**
  * 동물 상태 맵
  */
-export type AnimalStateMap = Record<AnimalId, AnimalState>;
+export type AnimalStateMap = Record<string, AnimalState>;
 
 /**
  * AI 분석 결과 데이터

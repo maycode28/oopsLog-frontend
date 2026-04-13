@@ -19,20 +19,13 @@ export default function ScreenRescue({ dir, aiData, onRestart }: ScreenRescuePro
       transition={{ duration: 0.35 }}
       className="screen rescue-screen"
     >
-      <div className="score-bar">
-        <div className="score-bar__center">
-          <span className="score-bar__brand">마음 구조 진행도</span>
-          <span className="score-bar__score">{score} Score</span>
-        </div>
-      </div>
-
       <div className="screen-inner rescue-inner">
-        <h2 className="rescue-title">{aiData?.title ?? '마음 구조 현장'}</h2>
+        <h2 className="rescue-title">{aiData?.title ?? '동물 친구들을 만나고 있어요'}</h2>
 
         <div className="analysis-panel" aria-live="polite">
-          <h3>상황 속 객관적 사실</h3>
+          <h3>상황 단서</h3>
           <ul className="facts-list">
-            {(aiData?.facts?.length ? aiData.facts : ['분석된 사실 데이터가 없습니다.']).map((fact, index) => (
+            {(aiData?.facts?.length ? aiData.facts : ['아직 정리된 단서가 없어요.']).map((fact, index) => (
               <li key={`${fact}-${index}`}>
                 <span className="facts-list__icon" aria-hidden="true">
                   🌿
@@ -45,6 +38,8 @@ export default function ScreenRescue({ dir, aiData, onRestart }: ScreenRescuePro
 
         <div className="user-avatar">🪴</div>
 
+        <p className="rescue-intro">카드를 뒤집어 곤경에 처한 동물들을 도와주세요.</p>
+
         <div className="animal-grid">
           {animals.map((animal) => (
             <RescueAnimal
@@ -56,21 +51,23 @@ export default function ScreenRescue({ dir, aiData, onRestart }: ScreenRescuePro
           ))}
         </div>
 
+        <p className="rescue-helper">카드는 다시 눌러 앞뒤를 볼 수 있어요.</p>
+
         <p className="rescue-progress">
-          {rescuedCount} / {animals.length} 교정 완료
+          {rescuedCount} / {animals.length}마리 만났어요
         </p>
 
         {isGameClear ? (
           <div className="rescue-result-panel" aria-live="polite">
-            <p className="rescue-result-score">{score} Score</p>
+            <p className="rescue-result-score">총 {score}점</p>
             <p className="rescue-result-message">
-              {aiData?.analysisMessage ?? aiData?.summary ?? '모든 왜곡 사고 카드를 정리했습니다.'}
+              {aiData?.analysisMessage ?? aiData?.summary ?? '동물 친구들을 모두 만났어요. 이제 마을에서 다시 볼 수 있어요.'}
             </p>
           </div>
         ) : null}
 
         <button className="primary-button" onClick={onRestart}>
-          다시 보기
+          다른 이야기 쓰기
         </button>
 
         {isGameClear ? (
@@ -79,7 +76,7 @@ export default function ScreenRescue({ dir, aiData, onRestart }: ScreenRescuePro
             className="secondary-button"
             onClick={() => navigate('/mypage')}
           >
-            내 목록 보기
+            마을에서 보기
           </button>
         ) : null}
       </div>
@@ -95,7 +92,7 @@ export default function ScreenRescue({ dir, aiData, onRestart }: ScreenRescuePro
               exit={{ opacity: 0, y: -40, scale: 0.9 }}
               transition={{ duration: 0.45 }}
             >
-              +{popup.value} Score
+              +{popup.value}점
             </motion.div>
           ))}
         </AnimatePresence>
