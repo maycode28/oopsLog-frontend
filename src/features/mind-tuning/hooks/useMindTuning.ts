@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { MutableRefObject } from 'react';
 
 import { fetchAIData } from '../api/ai';
@@ -17,17 +17,17 @@ export function useMindTuning(): UseMindTuningReturn {
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const restartTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const clearTimeoutRef = (timerRef: MutableRefObject<ReturnType<typeof setTimeout> | null>) => {
+  const clearTimeoutRef = useCallback((timerRef: MutableRefObject<ReturnType<typeof setTimeout> | null>) => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
     }
-  };
+  }, []);
 
-  const clearAllTimers = () => {
+  const clearAllTimers = useCallback(() => {
     clearTimeoutRef(transitionTimerRef);
     clearTimeoutRef(restartTimerRef);
-  };
+  }, [clearTimeoutRef]);
 
   const getDir = (current: ScreenName, next: ScreenName) => {
     const curIndex = SCREEN_ORDER.indexOf(current);
@@ -96,9 +96,9 @@ export function useMindTuning(): UseMindTuningReturn {
     }, SCANNING_DELAY);
 
     return () => clearTimeoutRef(transitionTimerRef);
-  }, [screen, loadingMode, aiData]);
+  }, [screen, loadingMode, aiData, clearTimeoutRef]);
 
-  useEffect(() => clearAllTimers, []);
+  useEffect(() => clearAllTimers, [clearAllTimers]);
 
   return {
     screen,

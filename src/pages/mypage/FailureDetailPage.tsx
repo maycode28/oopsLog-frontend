@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getUserSession } from "../../features/auth/utils/session";
 import { mypageApi } from "../../features/mypage/api/mypageApi";
 import type { FailureDetail } from "../../features/mypage/types/mypage.types";
 import { translateDistortionLabel } from "../../utils/distortion";
-import { getStoredUser } from "../../utils/session";
 
 function Cloud({ className }: { className?: string }) {
   return (
@@ -34,11 +34,12 @@ export default function FailureDetailPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedUser = getStoredUser();
+    const storedUser = getUserSession();
     const parsedFailureId = Number(failureId);
 
     if (!storedUser) {
-      navigate("/login", { replace: true });
+      setIsLoading(false);
+      setError("로그인 정보를 확인할 수 없습니다. 다시 로그인해 주세요.");
       return;
     }
 

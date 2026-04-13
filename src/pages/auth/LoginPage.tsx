@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AuthField } from "../../features/auth/components/AuthField";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 
@@ -16,10 +16,16 @@ function Cloud({ className }: { className?: string }) {
 }
 
 export default function LoginPage() {
+  const location = useLocation();
   const { login, isLoading, error } = useAuth();
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
+  const showSignupCompleted =
+    typeof location.state === "object" &&
+    location.state !== null &&
+    "signupCompleted" in location.state &&
+    location.state.signupCompleted === true;
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,15 +51,24 @@ export default function LoginPage() {
           </div>
 
           <h1 className="font-headline font-extrabold text-3xl text-primary tracking-tight">
-            마을에 오신 것을 환영해요
+            다시, 내 기록으로 돌아오기
           </h1>
 
           <p className="text-on-surface-variant font-medium text-sm px-6">
-            로그인하여 당신의 섬 탐험을 시작하세요!
+            로그인하고 실패 기록과 마음 정리를 이어서 확인해 보세요.
           </p>
         </div>
 
         <div className="w-full bg-white/80 backdrop-blur-xl rounded-2xl p-8 shadow-[0_32px_64px_-16px_rgba(23,97,139,0.12)] flex flex-col gap-5">
+          {showSignupCompleted && (
+            <div className="rounded-xl border border-primary/10 bg-primary-container/45 px-4 py-3 text-sm text-on-primary-container font-medium flex items-center gap-2">
+              <span className="material-symbols-outlined text-base shrink-0">
+                check_circle
+              </span>
+              <p>가입이 완료됐어요. 이제 로그인해서 시작해 보세요.</p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <AuthField
               id="loginId"
@@ -107,9 +122,11 @@ export default function LoginPage() {
             <div className="flex justify-end -mt-2">
               <button
                 type="button"
-                className="text-primary-dim text-sm font-semibold hover:underline underline-offset-4"
+                disabled
+                aria-disabled="true"
+                className="cursor-not-allowed text-primary-dim/70 text-sm font-semibold"
               >
-                아이디 / 비밀번호 찾기
+                계정 찾기 기능은 준비 중입니다
               </button>
             </div>
 
@@ -133,8 +150,8 @@ export default function LoginPage() {
                 </span>
               ) : (
                 <>
-                  나의 마을로 입장하기
-                  <span className="material-symbols-outlined">home</span>
+                  로그인
+                  <span className="material-symbols-outlined">login</span>
                 </>
               )}
             </button>
@@ -142,12 +159,12 @@ export default function LoginPage() {
         </div>
 
         <p className="text-on-surface-variant font-medium text-sm">
-          계정이 없으신가요?{" "}
+          아직 계정이 없으신가요?{" "}
           <Link
             to="/signup"
             className="font-bold text-primary hover:underline underline-offset-4"
           >
-            회원가입
+            회원가입하기
           </Link>
         </p>
       </main>

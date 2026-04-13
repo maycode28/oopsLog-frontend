@@ -51,11 +51,6 @@ export function useRescueFlow(aiData: AIResult | null) {
 
   useEffect(() => clearTimeouts, [clearTimeouts]);
 
-  useEffect(() => {
-    setAnimalStates(toAnimalStateMap(aiData));
-    setScorePopups([]);
-  }, [aiData]);
-
   const showScorePopup = useCallback(
     (value: number) => {
       const id = Date.now();

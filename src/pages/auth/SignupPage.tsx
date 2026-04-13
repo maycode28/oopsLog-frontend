@@ -1,5 +1,5 @@
 import { useState, type FormEvent, type ChangeEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthField } from "../../features/auth/components/AuthField";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import type { SignupRequest } from "../../features/auth/types/auth.types";
@@ -15,6 +15,7 @@ const INITIAL_FORM: SignupRequest = {
 };
 
 export default function SignupPage() {
+  const navigate = useNavigate();
   const { signup, isLoading, error } = useAuth();
   const [form, setForm] = useState<SignupRequest>(INITIAL_FORM);
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -35,7 +36,14 @@ export default function SignupPage() {
       return;
     }
 
-    await signup(form);
+    const isSuccess = await signup(form);
+
+    if (isSuccess) {
+      navigate("/login", {
+        replace: true,
+        state: { signupCompleted: true },
+      });
+    }
   };
 
   return (
@@ -80,10 +88,11 @@ export default function SignupPage() {
                 </span>
               </div>
               <h2 className="font-headline text-3xl font-extrabold tracking-tight text-on-surface">
-                새로운 모험을 시작해요!
+                계정을 만들고 기록을 시작하세요
               </h2>
               <p className="mt-2 text-on-surface-variant font-medium text-sm">
-                고유한 아이디를 만들고 우리 마을로 이사 오세요.
+                기본 정보를 입력하면 실패 기록과 분석을 내 계정에 안전하게
+                저장할 수 있어요.
               </p>
             </header>
 
@@ -95,10 +104,10 @@ export default function SignupPage() {
                 <AuthField
                   id="loginId"
                   name="loginId"
-                  label="패스포트 ID"
+                  label="아이디"
                   icon="id_card"
                   type="text"
-                  placeholder="고유한 ID 선택"
+                  placeholder="아이디를 입력하세요"
                   value={form.loginId}
                   onChange={set("loginId")}
                   required
@@ -109,10 +118,10 @@ export default function SignupPage() {
               <AuthField
                 id="name"
                 name="name"
-                label="실명"
+                label="이름"
                 icon="badge"
                 type="text"
-                placeholder="섬 주민 이름"
+                placeholder="이름을 입력하세요"
                 value={form.name}
                 onChange={set("name")}
                 required
@@ -124,7 +133,7 @@ export default function SignupPage() {
                 label="닉네임"
                 icon="face"
                 type="text"
-                placeholder="뭐라고 불러드릴까요?"
+                placeholder="닉네임을 입력하세요"
                 value={form.nickname}
                 onChange={set("nickname")}
                 required
@@ -266,8 +275,8 @@ export default function SignupPage() {
                     </span>
                   ) : (
                     <>
-                      모험 시작하기!
-                      <span className="material-symbols-outlined">sailing</span>
+                      회원가입
+                      <span className="material-symbols-outlined">person_add</span>
                     </>
                   )}
                 </button>
@@ -281,7 +290,7 @@ export default function SignupPage() {
                   to="/login"
                   className="text-primary font-bold hover:underline underline-offset-4"
                 >
-                  로그인
+                  로그인하기
                 </Link>
               </p>
             </footer>
