@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { mypageApi } from "../../features/mypage/api/mypageApi";
 import type { FailureDetail } from "../../features/mypage/types/mypage.types";
 import { translateDistortionLabel } from "../../utils/distortion";
@@ -84,17 +84,7 @@ export default function FailureDetailPage() {
       <main className="relative z-10 mx-auto flex min-h-[calc(100dvh-var(--app-header-height))] w-full max-w-5xl flex-col gap-6 px-4 py-8 md:px-6 lg:py-10">
         <section className="rounded-[2rem] border border-white/60 bg-white/80 p-6 shadow-[0_28px_80px_-32px_rgba(23,97,139,0.45)] backdrop-blur-2xl md:p-8">
           <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
-            <div className="space-y-4">
-              <Link
-                to="/mypage"
-                className="inline-flex items-center gap-2 rounded-full bg-surface-container px-4 py-2 text-sm font-bold text-primary transition hover:bg-primary hover:text-on-primary"
-              >
-                <span className="material-symbols-outlined text-[18px]">
-                  arrow_back
-                </span>
-                마이페이지로 돌아가기
-              </Link>
-
+            <div>
               <div>
                 <p className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary-container px-4 py-2 font-headline text-sm font-bold text-on-primary-container">
                   <span className="material-symbols-outlined text-base">
@@ -255,7 +245,7 @@ export default function FailureDetailPage() {
                 </div>
                 <div>
                   <h2 className="font-headline text-xl font-extrabold text-primary">
-                    있는 그대로의 사실
+                    객관적 사실
                   </h2>
                   <p className="text-sm text-on-surface-variant">
                     감정을 덜어내고 기록 속 사실만 차분하게 정리한 내용이에요.
