@@ -1,10 +1,12 @@
 import { AnimatePresence, motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 import { useRescueFlow } from '../hooks/useRescueFlow';
 import type { ScreenRescueProps } from '../types/mindTuning.types';
 import RescueAnimal from './RescueAnimal';
 
 export default function ScreenRescue({ dir, aiData, onRestart }: ScreenRescueProps) {
+  const navigate = useNavigate();
   const { animals, animalStates, score, scorePopups, rescuedCount, handleAnimalClick } = useRescueFlow(aiData);
   const isGameClear = rescuedCount === animals.length && animals.length > 0;
 
@@ -70,6 +72,16 @@ export default function ScreenRescue({ dir, aiData, onRestart }: ScreenRescuePro
         <button className="primary-button" onClick={onRestart}>
           다시 보기
         </button>
+
+        {isGameClear ? (
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => navigate('/mypage')}
+          >
+            내 목록 보기
+          </button>
+        ) : null}
       </div>
 
       <div className="score-popup-layer">

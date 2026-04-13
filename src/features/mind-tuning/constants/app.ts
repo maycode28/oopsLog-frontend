@@ -3,7 +3,6 @@ import type { AnimalConfig, GameTip, ScreenName } from "../types/mindTuning.type
 export const SCREEN_ORDER: ScreenName[] = ["confession", "scanning", "rescue"];
 
 export const SCANNING_DELAY = 500;
-export const DUMMY_ANALYSIS_DELAY = 1200;
 export const RESTART_LOADING_DELAY = 1100;
 
 export const GAME_TIPS: GameTip[] = [

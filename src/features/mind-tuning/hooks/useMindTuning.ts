@@ -2,11 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import type { MutableRefObject } from 'react';
 
 import { fetchAIData } from '../api/ai';
-import { DUMMY_ANALYSIS_DELAY, GAME_TIPS, RESTART_LOADING_DELAY, SCANNING_DELAY, SCREEN_ORDER } from '../constants/app';
-import { DUMMY_AI_RESULT } from '../mocks/dummyAnalysis';
+import { GAME_TIPS, RESTART_LOADING_DELAY, SCANNING_DELAY, SCREEN_ORDER } from '../constants/app';
 import type { AIResult, GameTip, LoadingMode, ScreenName, UseMindTuningReturn } from '../types/mindTuning.types';
-
-const ENABLE_DUMMY_PREVIEW = import.meta.env.DEV;
 
 export function useMindTuning(): UseMindTuningReturn {
   const [screen, setScreen] = useState<ScreenName>('confession');
@@ -17,7 +14,6 @@ export function useMindTuning(): UseMindTuningReturn {
   const [loadingMode, setLoadingMode] = useState<LoadingMode>('analysis');
   const [currentGameTip, setCurrentGameTip] = useState<GameTip | null>(null);
 
-  const dummyDelayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const restartTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -29,7 +25,6 @@ export function useMindTuning(): UseMindTuningReturn {
   };
 
   const clearAllTimers = () => {
-    clearTimeoutRef(dummyDelayTimerRef);
     clearTimeoutRef(transitionTimerRef);
     clearTimeoutRef(restartTimerRef);
   };
@@ -41,14 +36,6 @@ export function useMindTuning(): UseMindTuningReturn {
   };
 
   const getRandomGameTip = () => GAME_TIPS[Math.floor(Math.random() * GAME_TIPS.length)];
-
-  const waitForDummyAnalysis = (delay: number) =>
-    new Promise<void>((resolve) => {
-      dummyDelayTimerRef.current = setTimeout(() => {
-        dummyDelayTimerRef.current = null;
-        resolve();
-      }, delay);
-    });
 
   const handleConfess = async (text: string) => {
     clearAllTimers();
@@ -62,10 +49,7 @@ export function useMindTuning(): UseMindTuningReturn {
     setScreen('scanning');
 
     try {
-      const data = ENABLE_DUMMY_PREVIEW
-        ? await waitForDummyAnalysis(DUMMY_ANALYSIS_DELAY).then(() => DUMMY_AI_RESULT)
-        : await fetchAIData(text);
-
+      const data = await fetchAIData(text);
       setAiData(data);
     } catch (error) {
       console.error('AI 분석 로딩 실패:', error);

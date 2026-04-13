@@ -173,6 +173,29 @@ textarea {
   cursor: not-allowed;
 }
 
+.secondary-button {
+  width: 100%;
+  border: 1px solid rgba(23, 97, 139, 0.16);
+  border-radius: 999px;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-primary);
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 12px 24px rgba(23, 97, 139, 0.08);
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.secondary-button:hover {
+  transform: translateY(-1px);
+  background: rgba(144, 205, 253, 0.2);
+  box-shadow: 0 16px 28px rgba(23, 97, 139, 0.1);
+}
+
+.secondary-button:active {
+  transform: translateY(0);
+}
+
 .scanning-screen {
   display: flex;
   align-items: center;

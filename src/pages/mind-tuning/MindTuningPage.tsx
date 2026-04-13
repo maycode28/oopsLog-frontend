@@ -9,15 +9,13 @@ import ScreenScanning from '../../features/mind-tuning/components/ScreenScanning
 import { useMindTuning } from '../../features/mind-tuning/hooks/useMindTuning';
 import '../../features/mind-tuning/styles/mind-tuning.css';
 
-const ENABLE_DUMMY_PREVIEW = import.meta.env.DEV;
-
 export default function MindTuningPage() {
   const navigate = useNavigate();
   const { screen, aiData, errorMessage, isLoading, dir, loadingMode, currentGameTip, handleConfess, handleRestart } =
     useMindTuning();
 
   useEffect(() => {
-    if (!ENABLE_DUMMY_PREVIEW && !getSessionUserId()) {
+    if (!getSessionUserId()) {
       navigate('/login', { replace: true });
     }
   }, [navigate]);
