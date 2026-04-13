@@ -87,11 +87,7 @@ export function mapAnalyzeResponseToAIResult(payload: unknown): AIResult {
       reframedThought: card.r,
       fact: data.fs[index],
     })),
-    animals: [
-      mapFlipCard(data.fc[0], data.fs[0]),
-      mapFlipCard(data.fc[1], data.fs[1]),
-      mapFlipCard(data.fc[2], data.fs[2]),
-    ],
+    animals: data.fc.map((card, index) => mapFlipCard(card, data.fs[index])),
     title: data.ti,
     summary: data.am,
     analysisMessage: data.am,

@@ -96,10 +96,6 @@ textarea {
   font-weight: 800;
 }
 
-.leaf-icon {
-  font-size: 42px;
-}
-
 .subtitle,
 .scanning-inner p {
   margin: 0;
@@ -110,6 +106,30 @@ textarea {
 .subtitle {
   max-width: 272px;
   text-wrap: balance;
+}
+
+.confession-guide {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(23, 97, 139, 0.1);
+  box-shadow: 0 10px 22px rgba(23, 97, 139, 0.07);
+  text-align: left;
+}
+
+.confession-guide__title {
+  margin: 0 0 6px;
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.confession-guide__body {
+  margin: 0;
+  color: var(--color-on-surface-variant);
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 .confession-input {
@@ -423,6 +443,23 @@ textarea {
 .animal-grid {
   display: grid;
   gap: 14px;
+}
+
+.rescue-intro {
+  margin: 2px 0 -4px;
+  color: var(--color-primary);
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+  font-weight: 700;
+}
+
+.rescue-helper {
+  margin: -2px 0 0;
+  color: var(--color-on-surface-variant);
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
 }
 
 .animal-card {

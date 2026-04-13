@@ -7,24 +7,33 @@ import {
 } from "../constants/app";
 import type { AIResult, AnimalId, AnimalStateMap, ScorePopup } from "../types/mindTuning.types";
 
-const toAnimalStateMap = (aiData: AIResult | null): AnimalStateMap => ({
-  turtle: {
-    step: 1,
-    data: aiData?.animals?.[0] ?? {},
-  },
-  squirrel: {
-    step: 1,
-    data: aiData?.animals?.[1] ?? {},
-  },
-  rabbit: {
-    step: 1,
-    data: aiData?.animals?.[2] ?? {},
-  },
-});
+const getRescueAnimals = (aiData: AIResult | null) => {
+  const count = aiData?.animals.length ?? 0;
+
+  return Array.from({ length: count }, (_, index) => {
+    const template = RESCUE_ANIMALS[index % RESCUE_ANIMALS.length];
+
+    return {
+      ...template,
+      id: `animal-${index}`,
+    };
+  });
+};
+
+const toAnimalStateMap = (aiData: AIResult | null): AnimalStateMap =>
+  getRescueAnimals(aiData).reduce<AnimalStateMap>((acc, animal, index) => {
+    acc[animal.id] = {
+      step: 1,
+      isBackVisible: false,
+      data: aiData?.animals?.[index] ?? {},
+    };
+
+    return acc;
+  }, {});
 
 export function useRescueFlow(aiData: AIResult | null) {
+  const animals = useMemo(() => getRescueAnimals(aiData), [aiData]);
   const [animalStates, setAnimalStates] = useState<AnimalStateMap>(() => toAnimalStateMap(aiData));
-  const [score, setScore] = useState(0);
   const [scorePopups, setScorePopups] = useState<ScorePopup[]>([]);
 
   const timeoutsRef = useRef<number[]>([]);
@@ -41,6 +50,11 @@ export function useRescueFlow(aiData: AIResult | null) {
   }, []);
 
   useEffect(() => clearTimeouts, [clearTimeouts]);
+
+  useEffect(() => {
+    setAnimalStates(toAnimalStateMap(aiData));
+    setScorePopups([]);
+  }, [aiData]);
 
   const showScorePopup = useCallback(
     (value: number) => {
@@ -62,6 +76,15 @@ export function useRescueFlow(aiData: AIResult | null) {
       }
 
       if (current.step !== 1) {
+        if (current.step === 4) {
+          setAnimalStates((prev) => ({
+            ...prev,
+            [id]: {
+              ...prev[id],
+              isBackVisible: !prev[id].isBackVisible,
+            },
+          }));
+        }
         return;
       }
 
@@ -79,10 +102,10 @@ export function useRescueFlow(aiData: AIResult | null) {
           [id]: {
             ...prev[id],
             step: 4,
+            isBackVisible: true,
           },
         }));
 
-        setScore((prev) => prev + 10);
         showScorePopup(10);
       }, RESCUE_PHASE_DELAY);
     },
@@ -90,14 +113,19 @@ export function useRescueFlow(aiData: AIResult | null) {
   );
 
   const rescuedCount = useMemo(
-    () => Object.values(animalStates).filter((animal) => animal.step === 4).length,
-    [animalStates],
+    () => animals.filter((animal) => animalStates[animal.id]?.step === 4).length,
+    [animals, animalStates],
+  );
+
+  const totalScore = useMemo(
+    () => rescuedCount * 10,
+    [rescuedCount],
   );
 
   return {
-    animals: RESCUE_ANIMALS,
+    animals,
     animalStates,
-    score,
+    score: totalScore,
     scorePopups,
     rescuedCount,
     handleAnimalClick,
