@@ -1,12 +1,16 @@
-﻿/**
+/**
  * 화면 흐름 이름
  */
-export type ScreenName = "confession" | "scanning" | "rescue";
+export type ScreenName = 'confession' | 'scanning' | 'rescue';
+
+export type LoadingMode = 'analysis' | 'restart';
+
+export type GameTip = string;
 
 /**
  * 동물 ID
  */
-export type AnimalId = "turtle" | "squirrel" | "bird";
+export type AnimalId = 'turtle' | 'squirrel' | 'rabbit';
 
 /**
  * 구조 화면 단계
@@ -22,9 +26,18 @@ export type RescueStep = 0 | 1 | 2 | 3 | 4;
  * 동물별 AI 응답 데이터
  */
 export interface AnimalAIItem {
+  label?: string;
+  fact?: string;
   distortion?: string;
   perspective?: string;
   thanks?: string;
+}
+
+export interface FlipCardItem {
+  label: string;
+  mistakenThought: string;
+  reframedThought: string;
+  fact?: string;
 }
 
 /**
@@ -51,14 +64,15 @@ export type AnimalStateMap = Record<AnimalId, AnimalState>;
 
 /**
  * AI 분석 결과 데이터
- * - 기존 summary/result 카드 UI도 유지 가능
- * - rescue 화면용 animals 배열도 명시적으로 정의
  */
 export interface AIResult {
   animals: AnimalAIItem[];
+  flipCards: FlipCardItem[];
 
   title: string;
   summary: string;
+  analysisMessage: string;
+  facts: string[];
   comfortMessage: string;
 
   actionTip?: string;
@@ -72,8 +86,11 @@ export interface AIResult {
 export interface UseMindTuningReturn {
   screen: ScreenName;
   aiData: AIResult | null;
+  errorMessage: string | null;
   isLoading: boolean;
   dir: number;
+  loadingMode: LoadingMode;
+  currentGameTip: GameTip | null;
   handleConfess: (text: string) => Promise<void>;
   handleRestart: () => void;
 }
@@ -83,6 +100,8 @@ export interface UseMindTuningReturn {
  */
 export interface ScreenConfessionProps {
   dir: number;
+  errorMessage?: string | null;
+  isSubmitting?: boolean;
   onSubmit: (text: string) => void | Promise<void>;
 }
 
@@ -92,6 +111,8 @@ export interface ScreenConfessionProps {
 export interface ScreenScanningProps {
   dir: number;
   isLoading: boolean;
+  mode: LoadingMode;
+  gameTip?: GameTip | null;
 }
 
 /**
@@ -109,6 +130,7 @@ export interface ScreenRescueProps {
  */
 export interface ConfessionFormProps {
   onSubmit: (text: string) => void | Promise<void>;
+  errorMessage?: string | null;
   isSubmitting?: boolean;
   initialValue?: string;
   placeholder?: string;
@@ -120,7 +142,9 @@ export interface ConfessionFormProps {
  */
 export interface ScanningIndicatorProps {
   isLoading: boolean;
+  title?: string;
   message?: string;
+  gameTip?: GameTip | null;
 }
 
 /**
@@ -130,7 +154,6 @@ export interface ScanningIndicatorProps {
 export interface RescueAnimalProps {
   animal: AnimalConfig;
   state: AnimalState;
-  sparkleSeed: number;
   onClick: () => void;
 }
 

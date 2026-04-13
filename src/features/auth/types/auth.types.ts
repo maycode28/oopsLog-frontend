@@ -33,7 +33,7 @@ export interface UserResponse {
 export interface ApiResponse<T> {
   success: boolean;
   message: string;
-  data: T;
+  data: T | null;
 }
 
 export interface AuthError {

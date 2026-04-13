@@ -1,26 +1,51 @@
-﻿import { AnimatePresence, motion } from "framer-motion";
+import { motion } from 'framer-motion';
+import confetti from 'canvas-confetti';
+import { useEffect, useRef } from 'react';
 
-import type { RescueAnimalProps } from "../types/mindTuning.types";
+import type { RescueAnimalProps } from '../types/mindTuning.types';
 
-function getBubbleText(step: RescueAnimalProps["state"]["step"], data: RescueAnimalProps["state"]["data"]) {
-  switch (step) {
-    case 0:
-      return "...";
-    case 1:
-      return data.distortion ?? "완벽해야만 한다는 생각이 올라와요...";
-    case 2:
-      return data.distortion ?? "모든 게 내 잘못처럼 느껴져요...";
-    case 3:
-      return data.perspective ?? "지금 힘든 건 사실이지만, 내가 부족해서만은 아니에요.";
-    case 4:
-      return data.thanks ?? "들어줘서 고마워요. 마음이 조금 가벼워졌어요.";
-    default:
-      return "...";
-  }
-}
+export default function RescueAnimal({ animal, state, onClick }: RescueAnimalProps) {
+  const isClickable = state.step === 1;
+  const isFlipped = state.step >= 4;
+  const bubbleRef = useRef<HTMLDivElement | null>(null);
+  const previousFlippedRef = useRef(isFlipped);
 
-export default function RescueAnimal({ animal, state, sparkleSeed, onClick }: RescueAnimalProps) {
-  const isClickable = state.step === 0 || state.step === 1;
+  useEffect(() => {
+    const didFlip = isFlipped && !previousFlippedRef.current;
+    previousFlippedRef.current = isFlipped;
+
+    if (!didFlip || !bubbleRef.current) {
+      return;
+    }
+
+    const rect = bubbleRef.current.getBoundingClientRect();
+    const origin = {
+      x: (rect.left + rect.width / 2) / window.innerWidth,
+      y: (rect.top + rect.height / 2) / window.innerHeight,
+    };
+
+    confetti({
+      particleCount: 28,
+      spread: 72,
+      startVelocity: 28,
+      decay: 0.92,
+      scalar: 0.8,
+      colors: ['#90cdfd', '#abf771', '#ffffff', '#17618b'],
+      origin,
+      zIndex: 30,
+    });
+
+    confetti({
+      particleCount: 18,
+      spread: 110,
+      startVelocity: 22,
+      decay: 0.94,
+      scalar: 0.6,
+      colors: ['#90cdfd', '#abf771', '#ffffff'],
+      origin,
+      zIndex: 30,
+    });
+  }, [isFlipped]);
 
   const animalMotion =
     state.step === 1
@@ -40,23 +65,38 @@ export default function RescueAnimal({ animal, state, sparkleSeed, onClick }: Re
 
   return (
     <motion.div
-      className={`animal-card step-${state.step} ${isClickable ? "clickable" : ""}`}
+      className={`animal-card step-${state.step} ${isClickable ? 'clickable' : ''}`}
       onClick={isClickable ? onClick : undefined}
       whileTap={isClickable ? { scale: 0.96 } : undefined}
       layout
     >
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`bubble-${state.step}`}
-          className={`animal-bubble bubble-step-${state.step}`}
-          initial={{ opacity: 0, y: 8, scale: 0.92 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -6, scale: 0.95 }}
-          transition={{ duration: 0.22 }}
-        >
-          {getBubbleText(state.step, state.data)}
-        </motion.div>
-      </AnimatePresence>
+      <motion.div
+        className="animal-bubble-scene"
+        ref={bubbleRef}
+        initial={false}
+        animate={{
+          rotateY: isFlipped ? 180 : 0,
+          scale: state.step === 2 ? [1, 1.04, 1] : 1,
+        }}
+        transition={{
+          rotateY: { duration: 0.72, ease: [0.22, 1, 0.36, 1] },
+          scale: { duration: 0.32 },
+        }}
+      >
+        <div className="animal-bubble-face animal-bubble-front bubble-step-1">
+          <div className="animal-bubble__content">
+            {state.data.label ? <div className="animal-tag">{state.data.label}</div> : null}
+            <p>{state.data.distortion ?? ''}</p>
+          </div>
+        </div>
+
+        <div className="animal-bubble-face animal-bubble-back bubble-step-4">
+          <div className="animal-bubble__content">
+            {state.data.label ? <div className="animal-tag animal-tag--success">{state.data.label}</div> : null}
+            <p>{state.data.perspective ?? ''}</p>
+          </div>
+        </div>
+      </motion.div>
 
       <motion.div className={`animal-emoji animal-${animal.id}`} animate={animalMotion} transition={{ duration: 0.45 }}>
         {animal.emoji}
@@ -64,45 +104,6 @@ export default function RescueAnimal({ animal, state, sparkleSeed, onClick }: Re
 
       <div className="animal-name">{animal.name}</div>
 
-      <AnimatePresence>
-        {state.step === 2 && (
-          <motion.div
-            key={`sparkle-${sparkleSeed}`}
-            className="animal-sparkles"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.span
-              className="sparkle sparkle-1"
-              initial={{ opacity: 0, scale: 0.4, y: 0 }}
-              animate={{ opacity: 1, scale: 1.1, y: -18 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              ✨
-            </motion.span>
-            <motion.span
-              className="sparkle sparkle-2"
-              initial={{ opacity: 0, scale: 0.4, y: 0 }}
-              animate={{ opacity: 1, scale: 1.1, y: -26 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, delay: 0.05 }}
-            >
-              🌟
-            </motion.span>
-            <motion.span
-              className="sparkle sparkle-3"
-              initial={{ opacity: 0, scale: 0.4, y: 0 }}
-              animate={{ opacity: 1, scale: 1.1, y: -14 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.45, delay: 0.1 }}
-            >
-              💫
-            </motion.span>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 }
