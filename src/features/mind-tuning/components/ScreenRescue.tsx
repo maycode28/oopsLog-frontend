@@ -1,12 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 
 import { useRescueFlow } from '../hooks/useRescueFlow';
 import type { ScreenRescueProps } from '../types/mindTuning.types';
 import RescueAnimal from './RescueAnimal';
 
 export default function ScreenRescue({ dir, aiData, onRestart }: ScreenRescueProps) {
-  const navigate = useNavigate();
   const { animals, animalStates, score, scorePopups, rescuedCount, handleAnimalClick } = useRescueFlow(aiData);
   const isGameClear = rescuedCount === animals.length && animals.length > 0;
 
@@ -20,28 +18,10 @@ export default function ScreenRescue({ dir, aiData, onRestart }: ScreenRescuePro
       className="screen rescue-screen"
     >
       <div className="score-bar">
-        <button
-          type="button"
-          className="header-icon-button"
-          aria-label="뒤로가기"
-          onClick={() => window.history.back()}
-        >
-          <span className="material-symbols-outlined">arrow_back</span>
-        </button>
-
         <div className="score-bar__center">
-          <span className="score-bar__brand">oopsLog</span>
+          <span className="score-bar__brand">마음 구조 진행도</span>
           <span className="score-bar__score">{score} Score</span>
         </div>
-
-        <button
-          type="button"
-          className="header-icon-button"
-          aria-label="마이페이지로 이동"
-          onClick={() => navigate('/mypage')}
-        >
-          <span className="material-symbols-outlined">account_circle</span>
-        </button>
       </div>
 
       <div className="screen-inner rescue-inner">

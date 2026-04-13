@@ -72,7 +72,7 @@ export default function FailureDetailPage() {
   }, [failureId, navigate]);
 
   return (
-    <div className="relative min-h-dvh overflow-hidden bg-gradient-to-b from-primary-container to-white font-body text-on-surface">
+    <div className="relative min-h-[calc(100dvh-var(--app-header-height))] overflow-hidden bg-gradient-to-b from-primary-container to-white font-body text-on-surface">
       <div className="absolute inset-0 -z-10">
         <div className="absolute -top-20 -left-10 h-96 w-96 rounded-full bg-tertiary-container/30 blur-[120px]" />
         <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-secondary-container/20 blur-[100px]" />
@@ -81,7 +81,7 @@ export default function FailureDetailPage() {
       <Cloud className="left-[8%] top-[8%] animate-[float_7s_ease-in-out_infinite] opacity-80" />
       <Cloud className="right-0 top-[40%] scale-125 animate-[float_10s_ease-in-out_infinite_1s] opacity-60" />
 
-      <main className="relative z-10 mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-8 md:px-6 lg:py-10">
+      <main className="relative z-10 mx-auto flex min-h-[calc(100dvh-var(--app-header-height))] w-full max-w-5xl flex-col gap-6 px-4 py-8 md:px-6 lg:py-10">
         <section className="rounded-[2rem] border border-white/60 bg-white/80 p-6 shadow-[0_28px_80px_-32px_rgba(23,97,139,0.45)] backdrop-blur-2xl md:p-8">
           <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
             <div className="space-y-4">

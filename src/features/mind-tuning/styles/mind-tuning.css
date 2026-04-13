@@ -37,8 +37,10 @@ textarea {
 
 .app-shell {
   width: 100%;
+  min-height: calc(100dvh - var(--app-header-height));
   display: flex;
   justify-content: center;
+  align-items: center;
   padding: 24px;
 }
 
@@ -280,7 +282,7 @@ textarea {
 .score-bar {
   flex-shrink: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 14px 18px;
   background: rgba(255, 255, 255, 0.62);
@@ -296,35 +298,6 @@ textarea {
   align-items: center;
   gap: 2px;
   text-align: center;
-}
-
-.header-icon-button {
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.82);
-  color: var(--color-primary);
-  box-shadow: 0 4px 14px rgba(23, 97, 139, 0.1);
-  cursor: pointer;
-  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.header-icon-button:hover {
-  transform: translateY(-1px);
-  background: rgba(144, 205, 253, 0.24);
-  box-shadow: 0 8px 16px rgba(23, 97, 139, 0.12);
-}
-
-.header-icon-button:active {
-  transform: translateY(0);
-}
-
-.header-icon-button .material-symbols-outlined {
-  font-size: 22px;
 }
 
 .score-bar__brand {
