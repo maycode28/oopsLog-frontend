@@ -2,7 +2,6 @@
 
 import {
   RESCUE_ANIMALS,
-  RESCUE_COMPLETE_DELAY,
   RESCUE_PHASE_DELAY,
   SCORE_POPUP_DURATION,
 } from "../constants/app";
@@ -10,15 +9,15 @@ import type { AIResult, AnimalId, AnimalStateMap, ScorePopup } from "../types/mi
 
 const toAnimalStateMap = (aiData: AIResult | null): AnimalStateMap => ({
   turtle: {
-    step: 0,
+    step: 1,
     data: aiData?.animals?.[0] ?? {},
   },
   squirrel: {
-    step: 0,
+    step: 1,
     data: aiData?.animals?.[1] ?? {},
   },
-  bird: {
-    step: 0,
+  rabbit: {
+    step: 1,
     data: aiData?.animals?.[2] ?? {},
   },
 });
@@ -27,11 +26,6 @@ export function useRescueFlow(aiData: AIResult | null) {
   const [animalStates, setAnimalStates] = useState<AnimalStateMap>(() => toAnimalStateMap(aiData));
   const [score, setScore] = useState(0);
   const [scorePopups, setScorePopups] = useState<ScorePopup[]>([]);
-  const [sparkleIds, setSparkleIds] = useState<Record<AnimalId, number>>({
-    turtle: 0,
-    squirrel: 0,
-    bird: 0,
-  });
 
   const timeoutsRef = useRef<number[]>([]);
 
@@ -67,17 +61,6 @@ export function useRescueFlow(aiData: AIResult | null) {
         return;
       }
 
-      if (current.step === 0) {
-        setAnimalStates((prev) => ({
-          ...prev,
-          [id]: {
-            ...prev[id],
-            step: 1,
-          },
-        }));
-        return;
-      }
-
       if (current.step !== 1) {
         return;
       }
@@ -90,29 +73,17 @@ export function useRescueFlow(aiData: AIResult | null) {
         },
       }));
 
-      setSparkleIds((prev) => ({ ...prev, [id]: Date.now() }));
-
       schedule(() => {
         setAnimalStates((prev) => ({
           ...prev,
           [id]: {
             ...prev[id],
-            step: 3,
+            step: 4,
           },
         }));
 
-        schedule(() => {
-          setAnimalStates((prev) => ({
-            ...prev,
-            [id]: {
-              ...prev[id],
-              step: 4,
-            },
-          }));
-
-          setScore((prev) => prev + 10);
-          showScorePopup(10);
-        }, RESCUE_COMPLETE_DELAY);
+        setScore((prev) => prev + 10);
+        showScorePopup(10);
       }, RESCUE_PHASE_DELAY);
     },
     [animalStates, schedule, showScorePopup],
@@ -126,7 +97,6 @@ export function useRescueFlow(aiData: AIResult | null) {
   return {
     animals: RESCUE_ANIMALS,
     animalStates,
-    sparkleIds,
     score,
     scorePopups,
     rescuedCount,

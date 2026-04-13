@@ -1,22 +1,37 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
+import type { MutableRefObject } from 'react';
 
-import { FALLBACK_DATA, fetchAIData } from "../api/ai";
-import { SCANNING_DELAY, SCREEN_ORDER } from "../constants/app";
-import type { AIResult, ScreenName, UseMindTuningReturn } from "../types/mindTuning.types";
+import { fetchAIData } from '../api/ai';
+import { DUMMY_ANALYSIS_DELAY, GAME_TIPS, RESTART_LOADING_DELAY, SCANNING_DELAY, SCREEN_ORDER } from '../constants/app';
+import { DUMMY_AI_RESULT } from '../mocks/dummyAnalysis';
+import type { AIResult, GameTip, LoadingMode, ScreenName, UseMindTuningReturn } from '../types/mindTuning.types';
+
+const ENABLE_DUMMY_PREVIEW = import.meta.env.DEV;
 
 export function useMindTuning(): UseMindTuningReturn {
-  const [screen, setScreen] = useState<ScreenName>("confession");
+  const [screen, setScreen] = useState<ScreenName>('confession');
   const [aiData, setAiData] = useState<AIResult | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [dir, setDir] = useState(1);
+  const [loadingMode, setLoadingMode] = useState<LoadingMode>('analysis');
+  const [currentGameTip, setCurrentGameTip] = useState<GameTip | null>(null);
 
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dummyDelayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const restartTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const clearTimer = () => {
+  const clearTimeoutRef = (timerRef: MutableRefObject<ReturnType<typeof setTimeout> | null>) => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
     }
+  };
+
+  const clearAllTimers = () => {
+    clearTimeoutRef(dummyDelayTimerRef);
+    clearTimeoutRef(transitionTimerRef);
+    clearTimeoutRef(restartTimerRef);
   };
 
   const getDir = (current: ScreenName, next: ScreenName) => {
@@ -25,49 +40,90 @@ export function useMindTuning(): UseMindTuningReturn {
     return nextIndex >= curIndex ? 1 : -1;
   };
 
-  const handleConfess = async (text: string) => {
-    clearTimer();
+  const getRandomGameTip = () => GAME_TIPS[Math.floor(Math.random() * GAME_TIPS.length)];
 
+  const waitForDummyAnalysis = (delay: number) =>
+    new Promise<void>((resolve) => {
+      dummyDelayTimerRef.current = setTimeout(() => {
+        dummyDelayTimerRef.current = null;
+        resolve();
+      }, delay);
+    });
+
+  const handleConfess = async (text: string) => {
+    clearAllTimers();
+
+    setErrorMessage(null);
+    setCurrentGameTip(null);
+    setLoadingMode('analysis');
     setIsLoading(true);
     setAiData(null);
-    setDir(getDir(screen, "scanning"));
-    setScreen("scanning");
+    setDir(getDir(screen, 'scanning'));
+    setScreen('scanning');
 
     try {
-      const data = await fetchAIData(text);
+      const data = ENABLE_DUMMY_PREVIEW
+        ? await waitForDummyAnalysis(DUMMY_ANALYSIS_DELAY).then(() => DUMMY_AI_RESULT)
+        : await fetchAIData(text);
+
       setAiData(data);
     } catch (error) {
-      console.error("AI 데이터 로딩 실패:", error);
-      setAiData(FALLBACK_DATA);
+      console.error('AI 분석 로딩 실패:', error);
+      setAiData(null);
+      setErrorMessage(error instanceof Error ? error.message : '분석 중 오류가 발생했습니다.');
+      setDir(getDir('scanning', 'confession'));
+      setScreen('confession');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleRestart = () => {
-    clearTimer();
-    setDir(-1);
-    setAiData(null);
-    setIsLoading(false);
-    setScreen("confession");
+    clearAllTimers();
+    setErrorMessage(null);
+    setLoadingMode('restart');
+    setCurrentGameTip(getRandomGameTip());
+    setIsLoading(true);
+    setDir(getDir('rescue', 'scanning'));
+    setScreen('scanning');
+
+    restartTimerRef.current = setTimeout(() => {
+      setDir(-1);
+      setAiData(null);
+      setErrorMessage(null);
+      setCurrentGameTip(null);
+      setIsLoading(false);
+      setLoadingMode('analysis');
+      setScreen('confession');
+      restartTimerRef.current = null;
+    }, RESTART_LOADING_DELAY);
   };
 
   useEffect(() => {
-    if (screen === "scanning" && aiData) {
-      timerRef.current = setTimeout(() => {
-        setDir(1);
-        setScreen("rescue");
-      }, SCANNING_DELAY);
+    if (screen !== 'scanning' || loadingMode !== 'analysis' || !aiData) {
+      clearTimeoutRef(transitionTimerRef);
+      return;
     }
 
-    return clearTimer;
-  }, [screen, aiData]);
+    transitionTimerRef.current = setTimeout(() => {
+      setDir(1);
+      setScreen('rescue');
+      transitionTimerRef.current = null;
+    }, SCANNING_DELAY);
+
+    return () => clearTimeoutRef(transitionTimerRef);
+  }, [screen, loadingMode, aiData]);
+
+  useEffect(() => clearAllTimers, []);
 
   return {
     screen,
     aiData,
+    errorMessage,
     isLoading,
     dir,
+    loadingMode,
+    currentGameTip,
     handleConfess,
     handleRestart,
   };

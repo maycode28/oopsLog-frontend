@@ -1,7 +1,8 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authApi } from '../api/authApi';
 import type { LoginRequest, SignupRequest } from '../types/auth.types';
+import { clearUserSession, saveUserSession } from '../utils/session';
 
 export function useAuth() {
   const navigate = useNavigate();
@@ -14,8 +15,8 @@ export function useAuth() {
 
     try {
       const user = await authApi.login(data);
-      localStorage.setItem('user', JSON.stringify(user));
-      navigate('/');
+      saveUserSession(user);
+      navigate('/mind-tuning');
     } catch (err) {
       setError(err instanceof Error ? err.message : '로그인 중 오류가 발생했습니다.');
     } finally {
@@ -43,7 +44,7 @@ export function useAuth() {
 
     try {
       await authApi.logout();
-      localStorage.removeItem('user');
+      clearUserSession();
       navigate('/login');
     } catch (err) {
       setError(err instanceof Error ? err.message : '로그아웃 중 오류가 발생했습니다.');
@@ -54,3 +55,4 @@ export function useAuth() {
 
   return { login, signup, logout, isLoading, error };
 }
+

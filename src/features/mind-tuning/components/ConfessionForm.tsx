@@ -4,6 +4,7 @@ import type { ConfessionFormProps } from "../types/mindTuning.types";
 
 export default function ConfessionForm({
   onSubmit,
+  errorMessage,
   isSubmitting = false,
   initialValue = "",
   placeholder = "지금 마음을 짓누르는 생각은 무엇인가요?",
@@ -34,6 +35,9 @@ export default function ConfessionForm({
       <button className="primary-button" onClick={handleSubmit} disabled={isSubmitting}>
         {isSubmitting ? "구조 중..." : "구조 요청"}
       </button>
+
+      {errorMessage ? <p className="form-error-message">{errorMessage}</p> : null}
     </>
   );
 }
+
