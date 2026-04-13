@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../features/auth/hooks/useAuth";
+import { getUserSession } from "../../features/auth/utils/session";
 import { mypageApi } from "../../features/mypage/api/mypageApi";
 import type { FailureSummary } from "../../features/mypage/types/mypage.types";
 import type { UserResponse } from "../../features/auth/types/auth.types";
-import { getStoredUser } from "../../utils/session";
 
 function Cloud({ className }: { className?: string }) {
   return (
@@ -39,7 +39,6 @@ const formatDateTime = (value: string) =>
   }).format(new Date(value));
 
 export default function MyPage() {
-  const navigate = useNavigate();
   const { logout, isLoading: isLoggingOut } = useAuth();
   const [profile, setProfile] = useState<UserResponse | null>(null);
   const [failures, setFailures] = useState<FailureSummary[]>([]);
@@ -47,10 +46,11 @@ export default function MyPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedUser = getStoredUser();
+    const storedUser = getUserSession();
 
     if (!storedUser) {
-      navigate("/login", { replace: true });
+      setIsLoading(false);
+      setError("로그인 정보를 확인할 수 없습니다. 다시 로그인해 주세요.");
       return;
     }
 
@@ -78,7 +78,7 @@ export default function MyPage() {
     };
 
     void load();
-  }, [navigate]);
+  }, []);
 
   return (
     <div className="relative min-h-[calc(100dvh-var(--app-header-height))] overflow-hidden bg-gradient-to-b from-primary-container to-white font-body text-on-surface">
