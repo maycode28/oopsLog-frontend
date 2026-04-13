@@ -39,10 +39,10 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="relative min-h-dvh font-body text-on-surface bg-gradient-to-b from-primary-container/60 to-surface overflow-hidden">
+    <div className="relative min-h-dvh overflow-hidden bg-gradient-to-b from-primary-container to-white font-body text-on-surface">
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -top-32 -right-20 w-[500px] h-[500px] bg-primary-container/50 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 -left-20 w-[400px] h-[400px] bg-secondary-container/30 rounded-full blur-[100px]" />
+        <div className="absolute -top-20 -left-10 h-96 w-96 rounded-full bg-tertiary-container/30 blur-[120px]" />
+        <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-secondary-container/20 blur-[100px]" />
       </div>
 
       <div className="pointer-events-none absolute top-[12%] left-8 opacity-20 animate-[float_8s_ease-in-out_infinite]">
@@ -307,14 +307,6 @@ export default function SignupPage() {
           </div>
         </section>
       </main>
-
-      <div className="fixed bottom-0 inset-x-0 flex justify-center pb-6 pointer-events-none opacity-10">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <span key={i} className="material-symbols-outlined text-6xl">
-            grass
-          </span>
-        ))}
-      </div>
 
       <style>{`
         @keyframes float {
