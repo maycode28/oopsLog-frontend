@@ -1,6 +1,7 @@
 ﻿import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
+import MindTuningPage from "./pages/mind-tuning/MindTuningPage";
 import FailureDetailPage from "./pages/mypage/FailureDetailPage";
 import MyPage from "./pages/mypage/MyPage";
 
@@ -14,6 +15,8 @@ function App() {
           path="/mypage/failures/:failureId"
           element={<FailureDetailPage />}
         />
+
+        <Route path="/mind-tuning" element={<MindTuningPage />} />
 
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
