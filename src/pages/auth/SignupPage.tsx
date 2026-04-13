@@ -56,26 +56,7 @@ export default function SignupPage() {
         </span>
       </div>
 
-      <header className="fixed top-0 inset-x-0 z-50 h-16 px-5 flex items-center justify-between bg-surface/75 backdrop-blur-xl">
-        <div className="flex items-center gap-3">
-          <Link
-            to="/login"
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:scale-105 transition-transform"
-          >
-            <span className="material-symbols-outlined text-primary">
-              arrow_back
-            </span>
-          </Link>
-          <span className="font-headline font-bold text-primary text-lg">
-            커뮤니티 가입
-          </span>
-        </div>
-        <span className="font-headline font-black text-primary text-xl">
-          환영합니다
-        </span>
-      </header>
-
-      <main className="pt-24 pb-16 px-4 flex justify-center">
+      <main className="px-4 pb-16 pt-24 flex justify-center">
         <section className="relative w-full max-w-xl">
           <div className="hidden md:flex absolute -right-14 -bottom-10 w-28 h-28 bg-secondary-container rounded-2xl items-center justify-center rotate-12 shadow-lg z-10">
             <span className="material-symbols-outlined text-5xl text-secondary">

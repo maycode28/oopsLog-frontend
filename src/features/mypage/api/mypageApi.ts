@@ -19,6 +19,14 @@ const parseErrorMessage = async (res: Response, fallbackMessage: string) => {
   return fallbackMessage;
 };
 
+const requireData = <T>(data: T | null, fallbackMessage: string): T => {
+  if (data === null) {
+    throw new Error(fallbackMessage);
+  }
+
+  return data;
+};
+
 export const mypageApi = {
   getUserProfile: async (userId: number): Promise<UserResponse> => {
     const res = await fetch(`${BASE_URL}/api/users/${userId}`, {
@@ -36,7 +44,7 @@ export const mypageApi = {
     }
 
     const result: UserProfileResponse = await res.json();
-    return result.data;
+    return requireData(result.data, "사용자 정보를 불러오지 못했습니다.");
   },
 
   getFailures: async (userId: number): Promise<FailureSummary[]> => {
@@ -55,7 +63,7 @@ export const mypageApi = {
     }
 
     const result: FailureListResponse = await res.json();
-    return result.data;
+    return requireData(result.data, "실패 기록을 불러오지 못했습니다.");
   },
 
   getFailureDetail: async (
@@ -80,6 +88,6 @@ export const mypageApi = {
     }
 
     const result: FailureDetailResponse = await res.json();
-    return result.data;
+    return requireData(result.data, "실패 상세 정보를 불러오지 못했습니다.");
   },
 };

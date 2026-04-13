@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import AppLayout from "./layouts/AppLayout";
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
 import MindTuningPage from "./pages/mind-tuning/MindTuningPage";
@@ -9,14 +10,15 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<MyPage />} />
-        <Route path="/mypage" element={<MyPage />} />
-        <Route
-          path="/mypage/failures/:failureId"
-          element={<FailureDetailPage />}
-        />
-
-        <Route path="/mind-tuning" element={<MindTuningPage />} />
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<MyPage />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route
+            path="/mypage/failures/:failureId"
+            element={<FailureDetailPage />}
+          />
+          <Route path="/mind-tuning" element={<MindTuningPage />} />
+        </Route>
 
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />

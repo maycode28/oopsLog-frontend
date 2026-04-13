@@ -1,0 +1,32 @@
+<svg width="184" height="54" viewBox="0 0 184 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow" x="0" y="0" width="184" height="54" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#00557D" flood-opacity="0.18"/>
+    </filter>
+    <linearGradient id="fill" x1="22" y1="10" x2="156" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#17618B"/>
+      <stop offset="0.55" stop-color="#2D7FAF"/>
+      <stop offset="1" stop-color="#326800"/>
+    </linearGradient>
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="10" y="8" width="164" height="38" rx="19" fill="#ffffff" fill-opacity="0.78"/>
+    <text
+      x="92"
+      y="35"
+      text-anchor="middle"
+      fill="url(#fill)"
+      font-size="25"
+      font-weight="700"
+      letter-spacing="0.8"
+      font-family="Super Kidpop, Comic Sans MS, Trebuchet MS, cursive"
+      stroke="#EAF4FF"
+      stroke-width="1.5"
+      paint-order="stroke"
+    >
+      oopsLog
+    </text>
+    <circle cx="31" cy="18" r="4" fill="#FFD709"/>
+    <circle cx="154" cy="37" r="4" fill="#ABF771"/>
+  </g>
+</svg>

@@ -3,6 +3,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Super Kidpop";
+  src: url("/fonts/SuperKidpop.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ── Material You color tokens ─────────────────────────── */
 @theme {
   --color-inverse-surface: #0d0f0c;
@@ -64,6 +72,10 @@
   --font-headline: "Plus Jakarta Sans", sans-serif;
   --font-body: "Be Vietnam Pro", sans-serif;
   --font-label: "Plus Jakarta Sans", sans-serif;
+}
+
+:root {
+  --app-header-height: 72px;
 }
 
 /* ── Material Symbols ──────────────────────────────────── */
