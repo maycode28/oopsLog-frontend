@@ -81,10 +81,10 @@ export default function MyPage() {
   }, [navigate]);
 
   return (
-    <div className="relative min-h-dvh overflow-hidden bg-gradient-to-b from-primary-container/70 via-surface to-white font-body text-on-surface">
+    <div className="relative min-h-dvh overflow-hidden bg-gradient-to-b from-primary-container to-white font-body text-on-surface">
       <div className="absolute inset-0 -z-10">
-        <div className="absolute -left-16 top-0 h-80 w-80 rounded-full bg-tertiary-container/30 blur-[120px]" />
-        <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-secondary-container/25 blur-[120px]" />
+        <div className="absolute -top-20 -left-10 h-96 w-96 rounded-full bg-tertiary-container/30 blur-[120px]" />
+        <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-secondary-container/20 blur-[100px]" />
       </div>
 
       <Cloud className="right-[8%] top-[8%] animate-[float_7s_ease-in-out_infinite] opacity-80" />
